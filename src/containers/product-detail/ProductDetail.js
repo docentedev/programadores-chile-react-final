@@ -1,12 +1,20 @@
-import { useEffect, useState } from 'react'
-import { useParams, Link } from "react-router-dom"
+import { useEffect } from 'react'
+import { useParams } from "react-router-dom"
 import { productsGetAction, productsUpdateAction, productsUpdateResetAction } from '../../store/products/actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { productsGetSelector, productsUpdateSelector } from '../../store/products/selectors'
 
+import useInput from '../../hooks/useInput'
+import FormProductDetail from '../../components/form-product-detail/FormProductDetail'
+
 function Home() {
-    const [name, setName] = useState('')
-    const [price, setPrice] = useState('')
+    const inputData = useInput({
+        price: 0,
+        name: '',
+        description: '',
+        imgUrl: '',
+    })
+
     const params = useParams()
     const productStore = useSelector(productsGetSelector)
     const updateStore = useSelector(productsUpdateSelector)
@@ -17,11 +25,10 @@ function Home() {
     }, [dispatch, params.id])
 
     useEffect(() => {
-        if (!productStore.error && productStore.success && !productStore.loading) {
-            setName(productStore.data.name)
-            setPrice(productStore.data.price)
+        if (!productStore.error && productStore.success && !productStore.loading && !inputData.data.id) {
+            inputData.setData(productStore.data)
         }
-    }, [productStore])
+    }, [productStore, inputData])
 
     useEffect(() => {
         if (!updateStore.error && updateStore.success && !updateStore.loading) {
@@ -29,14 +36,12 @@ function Home() {
         }
     }, [updateStore, dispatch])
 
-    const handlerChangeName = ({ target }) => setName(target.value)
-    const handlerChangePrice = ({ target }) => setPrice(target.value)
     const handlerSubmit = (event) => {
         event.preventDefault()
         dispatch(productsUpdateAction({
             ...productStore.data,
-            name,
-            price: Number.parseFloat(price),
+            name: inputData.data.name,
+            price: Number.parseFloat(inputData.data.price),
         }))
     }
 
@@ -49,24 +54,12 @@ function Home() {
         <div className="container">
             <div className="row">
                 <div className="col">
-                    <form onSubmit={handlerSubmit} className="card">
-                        <div className="card-body">
-                            <div className="mb-3">
-                                <label for="exampleInputEmail1" className="form-label">Name</label>
-                                <input className="form-control" value={name} onChange={handlerChangeName} />
-                            </div>
-                            <div className="mb-3">
-                                <label for="exampleInputEmail1" className="form-label">Price</label>
-                                <input type="number" className="form-control" value={price} onChange={handlerChangePrice} />
-                            </div>
-                        </div>
-                        <div className="card-footer">
-                            <div className="btn-group">
-                                <button disabled={updateStore.loading} type="submit" className="btn btn-primary">Save</button>
-                                <Link className="btn btn-secondary" to={"/products"}>Back</Link>
-                            </div>
-                        </div>
-                    </form>
+                    <FormProductDetail
+                        data={inputData.data}
+                        loading={updateStore.loading}
+                        onSubmit={handlerSubmit}
+                        onChange={inputData.handlerChange}
+                    />
                 </div>
             </div>
         </div>

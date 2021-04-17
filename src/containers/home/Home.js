@@ -1,55 +1,60 @@
-import { useEffect } from 'react'
-import { generatePath, Link } from "react-router-dom"
-import { productsGetAllAction } from '../../store/products/actions'
+import { useEffect, useState } from 'react'
+import { Link } from "react-router-dom"
+import { productsGetAllAction, productsRemoveAction } from '../../store/products/actions'
 import { useDispatch, useSelector } from 'react-redux'
-import { productsGetAllSelector } from '../../store/products/selectors'
+import { productsGetAllSelector, productsRemoveSelector } from '../../store/products/selectors'
 
-const excerpt = (text) => {
-  const length = 30;
-  return text.substring(0, length);
-}
+import ModalDelete from '../../components/modal-delete/ModalDelete'
+import ProductTable from '../../components/product-table/ProductTable'
 
 function Home() {
+  const [deleteEntity, setDeleteEntity] = useState({})
   const productsStore = useSelector(productsGetAllSelector)
+  const productsRemoveStore = useSelector(productsRemoveSelector)
+
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(productsGetAllAction())
   }, [dispatch])
 
+  const deleteConfirm = (entity) => {
+    setDeleteEntity(entity)
+  }
+
+  const handlerDeleteCancel = () => {
+    setDeleteEntity({})
+  }
+
+  const handlerDeleteCommit = () => {
+    dispatch(productsRemoveAction(deleteEntity))
+  }
+
+  useEffect(() => {
+    if (productsRemoveStore.success) {
+      setDeleteEntity({})
+      dispatch(productsGetAllAction())
+    }
+  }, [productsRemoveStore, dispatch])
+
   return (
     <div className="container">
       <div className="row">
         <div className="col">
-          <div className="table-responsive">
-            {JSON.stringify(productsStore.loading)}
-            <Link to={"/products/create"}>Create</Link>
-            <table className="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Image</th>
-                  <th>Price</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {productsStore.data.map(item => (
-                  <tr key={item.id}>
-                    <td>#</td>
-                    <td>{item.name}</td>
-                    <td>{excerpt(item.imgUrl)}</td>
-                    <td>{item.price}</td>
-                    <td>
-                      <Link to={generatePath("/products/detail/:id", { id: item.id })}>Detail</Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Link to={"/products/create"}>Create</Link>
+          <ProductTable
+            onDelete={deleteConfirm}
+            data={productsStore.data}
+            loading={productsStore.loading}
+          />
         </div>
       </div>
+      {deleteEntity.id && (
+        <ModalDelete
+          entity={deleteEntity}
+          onCommit={handlerDeleteCommit}
+          onCancel={handlerDeleteCancel}
+          loading={productsRemoveStore.loading}
+        />)}
     </div>
   );
 }

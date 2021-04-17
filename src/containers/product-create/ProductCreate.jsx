@@ -1,23 +1,20 @@
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import { useDispatch, useSelector } from 'react-redux'
 import { productsCreateAction, productsCreateResetAction } from "../../store/products/actions"
 import { productsCreateSelector } from "../../store/products/selectors"
-
-const priceValidate = (value) => {
-    return value < 0 ? 0 : value
-}
+import useInput from '../../hooks/useInput'
 
 const ProductCreate = () => {
-    const createStore = useSelector(productsCreateSelector)
-    const history = useHistory()
-    const dispatch = useDispatch()
-    const [data, setData] = useState({
+    const inputData = useInput({
         price: 0,
         name: '',
         description: '',
         imgUrl: '',
     })
+    const createStore = useSelector(productsCreateSelector)
+    const history = useHistory()
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (createStore.data.id) {
@@ -26,34 +23,21 @@ const ProductCreate = () => {
         }
     }, [createStore, history, dispatch])
 
-    const handlerChange = (event) => {
-        const target = event.target
-        let value = target.value
-        const name = target.name
-        if (name === 'price') {
-            value = priceValidate(value)
-        }
-        setData({
-            ...data,
-            [name]: value,
-        })
-    }
-
     const handlerSubmit = (event) => {
         event.preventDefault()
-        dispatch(productsCreateAction(data));
+        dispatch(productsCreateAction(inputData.data));
     }
     return (
         <div>
             <form onSubmit={handlerSubmit}>
                 <label>Name</label>
-                <input name="name" value={data.name} onChange={handlerChange} /><br />
+                <input name="name" value={inputData.data.name} onChange={inputData.handlerChange} /><br />
                 <label>Price</label>
-                <input type="number" name="price" value={data.price} onChange={handlerChange} /><br />
+                <input type="number" name="price" value={inputData.data.price} onChange={inputData.handlerChange} /><br />
                 <label>Description</label>
-                <textarea name="description" value={data.description} onChange={handlerChange} /><br />
+                <textarea name="description" value={inputData.data.description} onChange={inputData.handlerChange} /><br />
                 <label>imgUrl</label>
-                <input name="imgUrl" value={data.imgUrl} onChange={handlerChange} /><br />
+                <input name="imgUrl" value={inputData.data.imgUrl} onChange={inputData.handlerChange} /><br />
                 <button>Save</button>
             </form>
         </div>

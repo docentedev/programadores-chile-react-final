@@ -30,6 +30,14 @@ const initialCreateState = {
     errorMessage: '',
 }
 
+const initialRemoveState = {
+    success: null,
+    error: null,
+    data: {},
+    loading: false,
+    errorMessage: '',
+}
+
 export const PRODUCTS_GET_ALL_START = 'PRODUCTS_GET_ALL_START'
 export const PRODUCTS_GET_ALL_ERROR = 'PRODUCTS_GET_ALL_ERROR'
 export const PRODUCTS_GET_ALL_SUCCESS = 'PRODUCTS_GET_ALL_SUCCESS'
@@ -47,6 +55,10 @@ export const PRODUCTS_CREATE_START = 'PRODUCTS_CREATE_START'
 export const PRODUCTS_CREATE_ERROR = 'PRODUCTS_CREATE_ERROR'
 export const PRODUCTS_CREATE_SUCCESS = 'PRODUCTS_CREATE_SUCCESS'
 export const PRODUCTS_CREATE_RESET = 'PRODUCTS_CREATE_RESET'
+
+export const PRODUCTS_REMOVE_START = 'PRODUCTS_REMOVE_START'
+export const PRODUCTS_REMOVE_ERROR = 'PRODUCTS_REMOVE_ERROR'
+export const PRODUCTS_REMOVE_SUCCESS = 'PRODUCTS_REMOVE_SUCCESS'
 
 export const getAllReducer = (prevState = initialState, action) => {
     switch (action.type) {
@@ -98,6 +110,19 @@ export const createReducer = (prevState = initialCreateState, action) => {
         case PRODUCTS_CREATE_ERROR:
             return { success: false, error: true, data: prevState.data, loading: false, errorMessage: action.payload }
         case PRODUCTS_CREATE_SUCCESS:
+            return { success: true, error: false, data: action.payload, loading: false, errorMessage: '' }
+        default:
+            return prevState
+    }
+}
+
+export const removeReducer = (prevState = initialRemoveState, action) => {
+    switch (action.type) {
+        case PRODUCTS_REMOVE_START:
+            return { ...initialRemoveState, loading: true, errorMessage: '', }
+        case PRODUCTS_REMOVE_ERROR:
+            return { success: false, error: true, data: prevState.data, loading: false, errorMessage: action.payload }
+        case PRODUCTS_REMOVE_SUCCESS:
             return { success: true, error: false, data: action.payload, loading: false, errorMessage: '' }
         default:
             return prevState

@@ -5,6 +5,7 @@ import {
     PRODUCTS_UPDATE_RESET,
     PRODUCTS_CREATE_ERROR, PRODUCTS_CREATE_START, PRODUCTS_CREATE_SUCCESS,
     PRODUCTS_CREATE_RESET,
+    PRODUCTS_REMOVE_ERROR, PRODUCTS_REMOVE_START, PRODUCTS_REMOVE_SUCCESS,
 } from "."
 import { productsClient } from "../../client"
 
@@ -96,4 +97,23 @@ export const productsCreateResetAction = (entity) => async (dispatch, getState) 
         type: PRODUCTS_CREATE_RESET,
         payload: null,
     })
+}
+
+export const productsRemoveAction = (entity) => async (dispatch, getState) => {
+    dispatch({
+        type: PRODUCTS_REMOVE_START,
+        payload: null,
+    })
+    try {
+        await productsClient.remove(entity)
+        dispatch({
+            type: PRODUCTS_REMOVE_SUCCESS,
+            payload: entity,
+        })
+    } catch (error) {
+        dispatch({
+            type: PRODUCTS_REMOVE_ERROR,
+            payload: error.message,
+        })
+    }
 }
