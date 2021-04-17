@@ -2,6 +2,7 @@ import {
     PRODUCTS_GET_ALL_ERROR, PRODUCTS_GET_ALL_START, PRODUCTS_GET_ALL_SUCCESS,
     PRODUCTS_GET_ERROR, PRODUCTS_GET_START, PRODUCTS_GET_SUCCESS,
     PRODUCTS_UPDATE_ERROR, PRODUCTS_UPDATE_START, PRODUCTS_UPDATE_SUCCESS,
+    PRODUCTS_UPDATE_RESET,
 } from "."
 import { productsClient } from "../../client"
 
@@ -60,4 +61,11 @@ export const productsUpdateAction = (entity) => async (dispatch, getState) => {
             payload: error.message,
         })
     }
+}
+
+export const productsUpdateResetAction = (entity) => async (dispatch, getState) => {
+    dispatch({
+        type: PRODUCTS_UPDATE_RESET,
+        payload: null,
+    })
 }

@@ -31,6 +31,7 @@ export const PRODUCTS_GET_SUCCESS = 'PRODUCTS_GET_SUCCESS'
 export const PRODUCTS_UPDATE_START = 'PRODUCTS_UPDATE_START'
 export const PRODUCTS_UPDATE_ERROR = 'PRODUCTS_UPDATE_ERROR'
 export const PRODUCTS_UPDATE_SUCCESS = 'PRODUCTS_UPDATE_SUCCESS'
+export const PRODUCTS_UPDATE_RESET = 'PRODUCTS_UPDATE_RESET'
 
 export const getAllReducer = (prevState = initialState, action) => {
     switch (action.type) {
@@ -60,6 +61,8 @@ export const getReducer = (prevState = initialGetState, action) => {
 
 export const updateReducer = (prevState = initialUpdateState, action) => {
     switch (action.type) {
+        case PRODUCTS_UPDATE_RESET:
+            return initialState
         case PRODUCTS_UPDATE_START:
             return { ...initialState, loading: true, errorMessage: '', }
         case PRODUCTS_UPDATE_ERROR:

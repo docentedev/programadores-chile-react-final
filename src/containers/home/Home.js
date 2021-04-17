@@ -39,7 +39,6 @@ function Home() {
                     <td>{excerpt(item.imgUrl)}</td>
                     <td>{item.price}</td>
                     <td>
-                      <button className="btn btn-sm btn-primary">Detail</button>
                       <Link to={generatePath("/products/:id", { id: item.id })}>Detail</Link>
                     </td>
                   </tr>
