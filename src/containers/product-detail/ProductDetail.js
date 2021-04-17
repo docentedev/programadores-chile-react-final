@@ -13,7 +13,7 @@ function Home() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(productsGetAction(params.id))
+        dispatch((productsGetAction(params.id)))
     }, [dispatch, params.id])
 
     useEffect(() => {

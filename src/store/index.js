@@ -5,6 +5,7 @@ import {
     getAllReducer as productGetAllReducer,
     getReducer as productGetReducer,
     updateReducer as productUpdateReducer,
+    createReducer as productCreateReducer,
 } from './products'
 
 const rootReducers = combineReducers({
@@ -12,6 +13,7 @@ const rootReducers = combineReducers({
         getAll: productGetAllReducer,
         get: productGetReducer,
         update: productUpdateReducer,
+        create: productCreateReducer,
     }),
 })
 

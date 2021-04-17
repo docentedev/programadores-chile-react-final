@@ -6,6 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './index.css'
 import Home from './containers/home/Home'
 import ProductDetail from './containers/product-detail/ProductDetail'
+import ProductCreate from './containers/product-create/ProductCreate'
+import NotFound from './containers/not-found/NotFound'
 import reportWebVitals from './reportWebVitals'
 import store from './store'
 
@@ -17,8 +19,14 @@ ReactDOM.render(
           <Route path={['/', '/products']} exact>
             <Home />
           </Route>
-          <Route path={'/products/:id'}>
+          <Route path={'/products/detail/:id'}>
             <ProductDetail />
+          </Route>
+          <Route path={'/products/create'}>
+            <ProductCreate />
+          </Route>
+          <Route path={'*'}>
+            <NotFound />
           </Route>
         </Switch>
       </Router>

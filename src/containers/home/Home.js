@@ -21,6 +21,8 @@ function Home() {
       <div className="row">
         <div className="col">
           <div className="table-responsive">
+            {JSON.stringify(productsStore.loading)}
+            <Link to={"/products/create"}>Create</Link>
             <table className="table table-striped">
               <thead>
                 <tr>
@@ -39,7 +41,7 @@ function Home() {
                     <td>{excerpt(item.imgUrl)}</td>
                     <td>{item.price}</td>
                     <td>
-                      <Link to={generatePath("/products/:id", { id: item.id })}>Detail</Link>
+                      <Link to={generatePath("/products/detail/:id", { id: item.id })}>Detail</Link>
                     </td>
                   </tr>
                 ))}
